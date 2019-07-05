@@ -113,13 +113,40 @@ minetest.register_on_punchnode(function(pos, node, puncher, pointed_thing)
 	
 	local nn = minetest.get_node(npos).name	
 	
+
+	local control = puncher:get_player_control()
+	
+	
+
+	
 	
 	if (npos.y < 400 or npos.y > 430 or npos.x < 91 or npos.x > 125 or npos.z < - 132 or npos.z > -98) and string.match(item, "lets_paint:") then
 		
 		puncher:set_wielded_item("")
 		minetest.chat_send_player(name, (minetest.colorize("red","<Mr.Bot> "..name..", you can't use brush tool here!")))
+
+
+	elseif string.match(item, "lets_paint:brush_") and control.sneak == true then
+	
+		for _, v in pairs(v) do
+
+			if puncher:get_wielded_item():get_name() == "lets_paint:brush_"..v[1] and node.name ~= "air" and string.match(node.name, "wool:") and not string.match(node.name, "carpet") then
+			
+
+
+				local pos1 = {x=npos.x-1, y=pos.y - 1 , z=npos.z-1}
+				local pos2 = {x=npos.x+1, y=pos.y + 1, z=npos.z+1}
+				for _,pos in ipairs(minetest.find_nodes_in_area(pos1, pos2, {"group:wool"})) do
+					minetest.set_node(pos, {name="wool:"..v[1]})
+				end
+
+										
+			end
+								
+		end	
+
 		
-	elseif string.match(item, "lets_paint:brush_") then
+	elseif string.match(item, "lets_paint:brush_") and not control.sneak == true then
 	
 		for _, v in pairs(v) do
 
